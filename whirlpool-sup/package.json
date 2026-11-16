@@ -1,0 +1,11 @@
+{
+  "name": "whirlpool-sup",
+  "version": "1.0.0",
+  "description": "Assistente de suporte operacional (núcleo independente de canal)",
+  "main": "src/core.js",
+  "scripts": {
+    "start": "node adapters/terminal.js",
+    "test": "node test.js"
+  },
+  "private": true
+}

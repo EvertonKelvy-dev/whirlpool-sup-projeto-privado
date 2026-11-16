@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#082b55">
+    <link rel="icon" href="./icone.jpg">
+    <link rel="apple-touch-icon" href="./icone.jpg">
+
+    <title>WHIRLPOOL SUP 1.0</title>
+
+    <style>
+        :root {
+            --navy: #082b55;
+            --navy-light: #174879;
+            --yellow: #ffbd16;
+            --background: #eaf0f6;
+            --text: #172638;
+            --muted: #6d7b8b;
+            --border: #dce4ed;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            height: 100vh;
+            height: 100dvh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(255,189,22,.12),
+                    transparent 32%
+                ),
+                var(--background);
+            color: var(--text);
+        }
+
+        .app {
+            width: 100%;
+            max-width: 490px;
+            height: min(880px, 100%);
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f7f9fc;
+            border: 1px solid rgba(8,43,85,.08);
+            border-radius: 18px;
+            box-shadow: 0 18px 55px rgba(8,43,85,.16);
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: calc(12px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px));
+            color: var(--white);
+            background: var(--navy);
+            border-bottom: 3px solid var(--yellow);
+        }
+
+        .topbar-avatar {
+            width: 43px;
+            height: 43px;
+            flex: 0 0 43px;
+            overflow: hidden;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid rgba(255,255,255,.75);
+        }
+
+        .topbar-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transform: scale(1.05);
+        }
+
+        .topbar h1 {
+            font-size: 15px;
+            letter-spacing: .35px;
+            margin-bottom: 4px;
+        }
+
+        .topbar p {
+            color: rgba(255,255,255,.78);
+            font-size: 11px;
+        }
+
+        #chat {
+            flex: 1;
+            min-height: 0;
+            padding: 16px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            background:
+                linear-gradient(
+                    rgba(247,249,252,.94),
+                    rgba(247,249,252,.94)
+                ),
+                repeating-linear-gradient(
+                    45deg,
+                    #e8eef5 0 1px,
+                    transparent 1px 12px
+                );
+        }
+
+        .message {
+            max-width: 94%;
+            padding: 13px 14px;
+            border-radius: 13px;
+            font-size: 13.5px;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+            animation: appear .18s ease-out;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-top-left-radius: 4px;
+            box-shadow: 0 2px 7px rgba(20,45,75,.035);
+        }
+
+        .user {
+            align-self: flex-end;
+            max-width: 82%;
+            background: #dceaff;
+            border: 1px solid #c9ddf5;
+            border-top-right-radius: 4px;
+        }
+
+        .message strong {
+            color: var(--navy);
+        }
+
+        /* IMAGEM DA MENSAGEM DE BOAS-VINDAS */
+
+        .brand-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 30vh;
+            max-height: 30dvh;
+            object-fit: contain;
+            margin: 0 0 10px;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .welcome-title {
+            font-size: 15px;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .option-button {
+            width: 100%;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #d6e0eb;
+            border-radius: 9px;
+            background: #fbfcfe;
+            color: var(--navy);
+            text-align: left;
+            font-size: 13px;
+            cursor: pointer;
+            transition:
+                background .15s,
+                border-color .15s,
+                transform .15s;
+        }
+
+        .option-button:hover {
+            background: #edf4fc;
+            border-color: #8daaca;
+            transform: translateY(-1px);
+        }
+
+        .option-number {
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+            display: grid;
+            place-items: center;
+            border-radius: 7px;
+            color: var(--white);
+            background: var(--navy);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .option-button.back {
+            justify-content: center;
+            margin-top: 2px;
+            color: white;
+            background: var(--navy);
+            border-color: var(--navy);
+            text-align: center;
+        }
+
+        .option-button.back:hover {
+            background: var(--navy-light);
+        }
+
+        .message a {
+            color: #145ca8;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px max(10px, env(safe-area-inset-right, 0px)) 10px max(10px, env(safe-area-inset-left, 0px));
+            background: white;
+            border-top: 1px solid var(--border);
+        }
+
+        #userInput {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 15px;
+            border: 1px solid #d4dde7;
+            border-radius: 24px;
+            outline: none;
+            font-size: 16px;
+            background: #f9fbfd;
+        }
+
+        #userInput:focus {
+            border-color: var(--navy-light);
+            background: white;
+        }
+
+        #sendButton {
+            width: 43px;
+            height: 43px;
+            flex: 0 0 43px;
+            border: 0;
+            border-radius: 50%;
+            color: white;
+            background: var(--navy);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background: var(--navy-light);
+        }
+
+        .footer {
+            padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+            text-align: center;
+            color: var(--muted);
+            background: white;
+            font-size: 10px;
+            border-top: 1px solid #eef1f5;
+        }
+
+        #chat::-webkit-scrollbar { display: none; }
+
+        .topbar, .hint, .input-area, .footer { flex-shrink: 0; }
+        .topbar h1, .topbar p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .topbar > div:last-child { min-width: 0; }
+        .message, .option-button span { min-width: 0; }
+
+        .hint {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            color: var(--navy);
+            background: #fff3c4;
+            border-bottom: 2px solid var(--yellow);
+            font-size: 13.5px;
+            line-height: 1.4;
+        }
+
+        .hint-icon { font-size: 22px; flex: 0 0 auto; }
+
+        .hint-tag {
+            display: inline-block;
+            padding: 1px 7px;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--navy);
+            font-weight: 700;
+            white-space: nowrap;
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse { 50% { box-shadow: 0 0 0 4px rgba(255,189,22,.55); } }
+        @media (prefers-reduced-motion: reduce) { .hint-tag { animation: none; } }
+
+        .input-area { position: relative; }
+
+        .mention-list {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: calc(100% + 6px);
+            z-index: 5;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(8,43,85,.18);
+        }
+
+        .mention-list[hidden] { display: none; }
+
+        .mention-item {
+            width: 100%;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border: 0;
+            background: #fff;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .mention-item:hover, .mention-item:focus { background: #edf4fc; }
+        .mention-item > span { display: flex; flex-direction: column; min-width: 0; }
+        .mention-item strong { color: var(--navy); font-size: 15px; }
+        .mention-item small { color: var(--muted); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mention-avatar { width: 38px; height: 38px; flex: 0 0 38px; }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        
+        body, .app, #chat, .message, .option-button, .input-area, #userInput, .footer, .mention-list, .mention-item, .hint {
+            transition: background-color .25s, border-color .25s, color .25s;
+        }
+        .hint { max-height: 120px; transition: opacity .25s, max-height .3s, padding .3s, border-width .3s; }
+        .hint.off { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; overflow: hidden; }
+        .message { animation: appear .28s cubic-bezier(.2,.8,.2,1); }
+        .option-button { animation: appear .3s ease-out both; }
+        .option-button:active, #sendButton:active, #themeButton:active { transform: scale(.95); }
+        .typing { display: flex; gap: 5px; padding: 13px 15px; }
+        .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: blink 1s infinite; }
+        .typing i:nth-child(2) { animation-delay: .15s; }
+        .typing i:nth-child(3) { animation-delay: .3s; }
+        @keyframes blink { 50% { opacity: .25; transform: translateY(-3px); } }
+        .foto { display: block; width: 100%; height: auto; margin-top: 10px; border-radius: 10px; }
+        .itens { list-style: none; margin: 8px 0; font-size: 12.5px; }
+        .itens li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+        .codigo { margin: 6px 0; font-size: 26px; font-weight: 800; letter-spacing: .5px; color: var(--navy); }
+        .call { display: flex; flex-direction: column; gap: 3px; padding: 14px; margin-bottom: 12px; border-radius: 12px; background: var(--navy); color: #fff !important; text-decoration: none !important; text-align: center; font-size: 20px; }
+        .call small { font-size: 12px; color: var(--yellow); font-weight: 700; }
+        .mention-item { gap: 12px; padding: 12px 14px; }
+        .mention-item > span { gap: 5px; }
+        .mention-item small { line-height: 1.4; }
+        .sug-more { padding: 8px 14px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+        #themeButton { width: 43px; height: 43px; flex: 0 0 43px; display: grid; place-items: center; border: 1px solid #d4dde7; border-radius: 50%; background: #f9fbfd; color: var(--navy); cursor: pointer; }
+        .footer a { color: var(--navy-light); font-weight: 700; }
+
+        [data-theme=dark] { color-scheme: dark; --background: #0b1523; --text: #e6edf5; --muted: #9aa9ba; --border: #27384d; }
+        [data-theme=dark] .app { background: #101c2d; border-color: rgba(255,255,255,.08); }
+        [data-theme=dark] #chat { background: #0e1a2a; }
+        [data-theme=dark] .bot { background: #17263a; color: var(--text); }
+        [data-theme=dark] .user { background: #1f4a7a; border-color: #2b5f99; color: #fff; }
+        [data-theme=dark] .message strong, [data-theme=dark] .welcome-title, [data-theme=dark] .mention-item strong { color: #9cc4ff; }
+        [data-theme=dark] .codigo { color: #ffd466; }
+        [data-theme=dark] .option-button { background: #1a2b42; border-color: #2b4260; color: #dbe8f7; }
+        [data-theme=dark] .option-button:hover { background: #223753; }
+        [data-theme=dark] .option-button.back { background: var(--navy-light); border-color: var(--navy-light); color: #fff; }
+        [data-theme=dark] .message a, [data-theme=dark] .footer a { color: #8fc1ff; }
+        [data-theme=dark] .input-area, [data-theme=dark] .footer { background: #101c2d; border-color: #27384d; }
+        [data-theme=dark] #userInput, [data-theme=dark] #themeButton { background: #17263a; border-color: #2b4260; color: #e6edf5; }
+        [data-theme=dark] #sendButton { background: var(--navy-light); }
+        [data-theme=dark] .hint { background: #3a3010; color: #ffe9a6; }
+        [data-theme=dark] .hint-tag { background: var(--yellow); color: var(--navy); }
+        [data-theme=dark] .mention-list, [data-theme=dark] .mention-item, [data-theme=dark] .brand-image { background: #17263a; }
+        [data-theme=dark] .mention-item:hover { background: #223753; }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+        @media (max-width: 520px) {
+            body { padding: 0; }
+
+            .app {
+                height: 100%;
+                max-width: none;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            #chat { padding: 12px; }
+            .message { font-size: 13px; }
+        }
+
+        @media (max-height: 520px) {
+            .footer, .topbar p { display: none; }
+            .brand-image { max-height: 24vh; max-height: 24dvh; }
+            .hint { padding: 6px 12px; font-size: 12.5px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <header class="topbar">
+
+            <div class="topbar-avatar">
+
+                <img
+                    src="./icone.jpg"
+                    alt="Mascote WHIRLPOOL SUP 1.0"
+                >
+
+            </div>
+
+            <div>
+                <h1>WHIRLPOOL SUP 1.0</h1>
+                <p>Assistente de suporte operacional</p>
+            </div>
+
+        </header>
+
+        <div class="hint" role="note">
+            <span class="hint-icon">💬</span>
+            <div>
+                <strong>Como começar:</strong> digite
+                <span class="hint-tag">@</span> e toque em
+                <span class="hint-tag">@whirpoolsup</span>
+                para chamar o assistente.
+            </div>
+        </div>
+
+        <main id="chat" aria-live="polite"></main>
+
+        <form class="input-area" id="messageForm">
+
+            <div id="mentionList" class="mention-list" role="listbox" hidden></div>
+
+            <input
+                type="text"
+                id="userInput"
+                placeholder="Digite @ para chamar o assistente"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                enterkeyhint="send"
+                aria-label="Mensagem"
+            >
+            <button id="themeButton" type="button" aria-label="Alternar tema"></button>
+            <button
+                id="sendButton"
+                type="submit"
+                title="Enviar"
+                aria-label="Enviar"
+            >➤</button>
+
+        </form>
+
+        <footer class="footer">
+            Protótipo de desenvolvimento • Criado por <a href="https://evertonkelvy-dev.github.io/instabio/" target="_blank" rel="noopener noreferrer">Everton Kelvy</a>
+        </footer>
+
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const chat = $("chat"), userInput = $("userInput"), messageForm = $("messageForm"), sug = $("mentionList"), themeBtn = $("themeButton"), hint = document.querySelector(".hint");
+        const MENTION = "@whirpoolsup", ICONE = "./icone.jpg", IMAGEM_BOAS_VINDAS = "./banner-boasvindas.png", CENTRO_CUSTO = "14703";
+        const PH_INICIO = "Digite @ para chamar o assistente", PH_MENU = "Digite o número (1 a 9) ou menu", PH_EPI = "Digite o nome do EPI (ex.: luva, óculos)";
+
+        // CARDÁPIO: troque as imagens (mesmo nome) toda semana. Apague "especial" quando não houver Quebra de Rotina.
+        const CARDAPIO = {
+            semana: "./materiais/cardapio-semana.jpg",
+            especial: { aviso: "Atenção: na <strong>quarta-feira (18/11)</strong> teremos <strong>Quebra de Rotina</strong>!", imagem: "./materiais/quebra-de-rotina.jpg" }
+        };
+
+        const links = {
+            tags: "https://docs.google.com/forms/d/e/1FAIpQLSdqbxjx47V_7i18v2wFBJz80hWVjicKETeaxQ7Wr3CFbWGIgg/viewform",
+            atestados: "https://docs.google.com/forms/d/1AUF02S-IGqzlco7WlnXO_3eC2UXl770JChUs4LiCiE/viewform?pli=1&pli=1&edit_requested=true",
+            smartLeader: "https://play.google.com/store/search?q=smartleader&c=apps&hl=pt_BR"
+        };
+
+        const modulos = ["Tags e Apontamentos", "KAIZEN", "Cardápio", "Códigos EPI", "Atestados", "DDS", "Ramal de emergência", "Smart Leader", "Outros assuntos"];
+
+        const MANG = 'Quantidade de mangote NOVO = "02"';
+        const EPIS = [
+            ["316.588.873","ADAPTADOR"],["316.626.627","AVENTAL LONA (AZUL)"],["316.537.861","AVENTAL DE RASPA"],["316.597.511","CAPACETE BRANCO"],
+            ["316.595.446","BONÉ (CASQUETE)"],["316.555.304","COLETE REFLETIVO"],["316.303.161","CREME DE MÃO PM-1000"],["316.499.757","PROTETOR SOLAR 60"],
+            ["316.578.681","LUVA DE RASPA"],["316.626.643","LUVA DESCARTÁVEL"],["316.832.146","LUVA EDGE 48-705 (SUBSTITUINDO A HYFLEX) ***"],["316.670.863","LUVA ESTAMPARIA"],
+            ["316.283.471","LUVA MESCLADA"],["316.190.324","LUVA NITRASAFE"],["316.608.521","LUVA PINTURA / LIMPEZA"],["316.208.568","MACACÃO"],
+            ["316.663.921","MANGOTE BRANCO",MANG],["316.691.593","MANGOTE PRETO",MANG],["316.691.585","MANGOTE PRETO (XG)",MANG],
+            ["316.632.910","ÓCULOS ESMALTAÇÃO"],["316.422.916","ÓCULOS ESPELHADO"],["316.048.129","ÓCULOS SOBREPOR"],["316.347.728","ÓCULOS TRANSPARENTE"],
+            ["316.563.285","PALMILHA"],["316.200.516","PROTETOR AURICULAR"],["316.704.113","PROTETOR COM TAMANHO P - M - G"],["316.107.176","PROTETOR FACIAL"],
+            ["316.069.789","PROTETOR DESCARTÁVEL"],["316.234.160","RESPIRADOR BRANCO"],["316.149.936","RESPIRADOR CINZA"],["316.732.974","SAPATO ANTIESTÁTICO"],
+            ["316.737.836","SAPATO ELETRICISTA"],["316.411.434","TOUCA"],["316.588.865","VISOR"]
+        ];
+        const SAPATOS = [["316.673.404","SAPATO CALBRÁS"],["316.689.572","SAPATO CONFORTO"]];
+        const MATERIAIS = [
+            ["316.308.609","CALCANHEIRA","Quantidade = 02"],["316.460.451","ESTILETE BICO DE PATO"],["316.436.437","ESTILETE RETRÁTIL"],["316.659.150","ESTILETE TRIMMEX (AZUL)"],
+            ["316.308.511","FITA 3M"],["316.233.104","FITA DEDO"],["316.458.791","FITA PET 13mm"],["316.702.390","FITA PET 16mm"],["316.318.991","FITA ZEBRADA"],
+            ["316.418.331","LÂMINA ESTILETE RETRÁTIL TRIMMEX"],["316.441.775","LÂMINA REBARBADOR (UNIDADE)"],["316.659.169","LÂMINA ESTILETE TRIMMEX (CAIXA)"],
+            ["316.153.216","LIMPA GRAXA"],["316.441.805","REBARBADOR (PRETO)"],["316.725.978","REBARBADOR MARTOR MAXI (VERMELHO)"],["316.641.600","MANTA ABSORVENTE"],["316.488.445","FITA DUPLA FACE"]
+        ];
+        const SAP_OBS = "Sapato de segurança: verifique com o atendente o modelo disponível para a sua numeração";
+        const ITENS = [
+            ...EPIS.map(([c,n,o]) => ({c,n,o,t:"EPI",tr:"702240"})),
+            ...SAPATOS.map(([c,n]) => ({c,n,o:SAP_OBS,t:"EPI",tr:"702240"})),
+            ...MATERIAIS.map(([c,n,o]) => ({c,n,o,t:"Material de processo",tr:"713060"}))
+        ];
+        const norm = t => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        ITENS.forEach(i => i.k = norm(i.n + " " + i.c));
+        const buscar = q => { const p = norm(q).split(/\s+/).filter(Boolean); return norm(q).trim().length >= 2 ? ITENS.filter(i => p.every(x => i.k.includes(x))) : []; };
+        const lista = a => '<ul class="itens">' + a.map(([c,n,o]) => `<li><b>${c}</b> — ${n}${o ? ` <small>(${o})</small>` : ""}</li>`).join("") + "</ul>";
+
+        let ativo = false, modo = "inicio", primeira = null;
+
+        const rolarParaBaixo = () => { chat.scrollTop = chat.scrollHeight; };
+
+        function adicionarMensagem(texto, tipo = "bot") {
+            const m = document.createElement("div");
+            m.className = `message ${tipo}`;
+            m.textContent = texto;
+            chat.appendChild(m);
+            rolarParaBaixo();
+            return m;
+        }
+
+        function adicionarRespostaHTML(html) {
+            const m = document.createElement("div");
+            m.className = "message bot";
+            m.innerHTML = html;
+            chat.appendChild(m);
+            rolarParaBaixo();
+            const im = m.querySelector("img");
+            if (im) im.addEventListener("load", () => chat.scrollTo({ top: m.getBoundingClientRect().top - chat.getBoundingClientRect().top + chat.scrollTop - 8, behavior: "smooth" }));
+            return m;
+        }
+
+        function adicionarBotoes(mensagem, botoes) {
+            const area = document.createElement("div");
+            area.className = "options";
+            botoes.forEach((b, i) => {
+                const el = document.createElement("button");
+                el.type = "button";
+                el.className = "option-button" + (b.voltar ? " back" : "");
+                el.style.animationDelay = i * 40 + "ms";
+                if (b.numero) { const n = document.createElement("span"); n.className = "option-number"; n.textContent = b.numero; el.appendChild(n); }
+                const r = document.createElement("span");
+                r.textContent = b.texto;
+                el.appendChild(r);
+                el.addEventListener("click", b.acao);
+                area.appendChild(el);
+            });
+            mensagem.appendChild(area);
+            rolarParaBaixo();
+        }
+
+        const voltarBtn = m => adicionarBotoes(m, [{ texto: "Voltar ao menu principal", voltar: true, acao: () => comDigitando(mostrarMenu) }]);
+
+        function comDigitando(fn, ms = 400) {
+            const t = document.createElement("div");
+            t.className = "message bot typing";
+            t.innerHTML = "<i></i><i></i><i></i>";
+            chat.appendChild(t);
+            rolarParaBaixo();
+            setTimeout(() => { t.remove(); fn(); }, ms);
+        }
+
+        function seqHTML(h, i = 0) {
+            const m = adicionarRespostaHTML(h[i]);
+            if (i < h.length - 1) comDigitando(() => seqHTML(h, i + 1), 500); else voltarBtn(m);
+        }
+
+        function mostrarMenu() {
+            modo = "menu";
+            userInput.placeholder = PH_MENU;
+            const m = adicionarRespostaHTML('<div class="welcome-title">Como podemos ajudar você hoje?</div>Selecione uma das opções abaixo ou digite o número:');
+            adicionarBotoes(m, modulos.map((nome, i) => ({ numero: i + 1, texto: nome, acao: () => selecionarModulo(i + 1) })));
+        }
+
+        function chamarAssistente() {
+            ativo = true;
+            const m = document.createElement("div");
+            m.className = "message bot";
+            const img = document.createElement("img");
+            img.className = "brand-image";
+            img.src = IMAGEM_BOAS_VINDAS;
+            img.alt = "WHIRLPOOL SUP 1.0";
+            img.onload = rolarParaBaixo;
+            img.onerror = () => { img.remove(); const a = document.createElement("p"); a.textContent = "Não foi possível carregar a imagem de boas-vindas."; m.insertBefore(a, m.firstChild); };
+            const t = document.createElement("div");
+            t.className = "welcome-title";
+            t.textContent = "WHIRLPOOL SUP 1.0";
+            const p = document.createElement("p");
+            p.textContent = "Olá! Estou disponível para ajudar. Como podemos ajudar você hoje?";
+            m.append(img, t, p);
+            chat.appendChild(m);
+            rolarParaBaixo();
+            comDigitando(mostrarMenu, 450);
+        }
+
+        function mostrarResposta(titulo, html) {
+            voltarBtn(adicionarRespostaHTML(`<strong>${titulo}</strong><br><br>${html}`));
+        }
+
+        function mostrarEPI() {
+            modo = "epi";
+            userInput.placeholder = PH_EPI;
+            seqHTML([
+                `<strong>📋 1/3 — INSTRUÇÕES E REPROVAÇÃO DE REQUISIÇÕES</strong><br><br>Prezados colaboradores, informamos os critérios de <strong>reprovação de requisições</strong>:<ul class="itens"><li>Sem rasuras;</li><li>Fora da data de validade (válida apenas no dia atual);</li><li>Requisições sujas, rasgadas ou rasuradas;</li><li>Requisições com campos não preenchidos.</li></ul><strong>Obs.:</strong> em caso de dúvida no preenchimento, pergunte antes de preencher.<br><br><strong>Alguns exemplos:</strong><ul class="itens"><li>Mangote novo: quantidade 2;</li><li>Centro de custo 14706 e 14708, luvas descartáveis: quantidade 6 pares;</li><li>Protetor auricular: antes de preencher, consultar o tamanho;</li><li>Mangote higienizado: requisição separada de outros EPIs, quantidade 0.</li></ul>`,
+                `<strong>🛠️ 2/3 — MATERIAIS DE PROCESSO</strong><br>Transação contábil: <strong>713060</strong>${lista(MATERIAIS)}`,
+                `<strong>🦺 3/3 — REQUISIÇÕES DE EPIs</strong><br>Transação contábil: <strong>702240</strong><br>O centro de custo pode ser <strong>${CENTRO_CUSTO}</strong>.${lista(EPIS)}<strong>SAPATO DE SEGURANÇA</strong><br><small>Verifique com o atendente qual o modelo disponível de acordo com a sua numeração.</small>${lista(SAPATOS)}`,
+                `<strong>🔎 Busca rápida</strong><br><br>Digite o nome do EPI ou material (ex.: <em>luva</em>, <em>óculos</em>). As sugestões aparecem enquanto você digita.`
+            ]);
+        }
+
+        function mostrarItem(i) {
+            userInput.value = "";
+            sugerir([]);
+            const m = adicionarRespostaHTML(`<strong>${i.n}</strong><div class="codigo">${i.c}</div>${i.t} • Transação contábil: <strong>${i.tr}</strong>${i.t === "EPI" ? `<br>Centro de custo: <strong>${CENTRO_CUSTO}</strong>` : ""}${i.o ? `<br><small>${i.o}</small>` : ""}`);
+            adicionarBotoes(m, [
+                { texto: "Copiar código", acao: e => { try { navigator.clipboard.writeText(i.c).then(() => { e.currentTarget.lastChild.textContent = "Código copiado ✓"; }, () => {}); } catch (x) {} } },
+                { texto: "Voltar ao menu principal", voltar: true, acao: () => comDigitando(mostrarMenu) }
+            ]);
+        }
+
+        const img = (s, a) => `<a href="${s}" target="_blank" rel="noopener noreferrer"><img class="foto" src="${s}" alt="${a}"></a>`;
+
+        const MOD = {
+            1: () => mostrarResposta("TAGS E APONTAMENTOS", `Para registrar seus apontamentos, acesse o formulário oficial:<br><br><a href="${links.tags}" target="_blank" rel="noopener noreferrer">Acessar formulário de Tags e Apontamentos</a>`),
+            2: () => mostrarResposta("KAIZEN", "Conforme as diretrizes do programa, é permitido o registro de no <strong>máximo 2 (dois) Kaizens por mês</strong>.<br><br>Em breve, o link oficial para registro será disponibilizado neste canal."),
+            3: () => { const e = CARDAPIO.especial; seqHTML([`<strong>CARDÁPIO SEMANAL</strong><br><br>Confira o cardápio da semana. Toque na imagem para ampliar.${img(CARDAPIO.semana, "Cardápio da semana")}`, ...(e ? [`${e.aviso}${img(e.imagem, "Quebra de Rotina")}`] : [])]); },
+            4: mostrarEPI,
+            5: () => mostrarResposta("ATESTADOS", `Para realizar o envio do formulário de atestado, acesse o link abaixo:<br><br><a href="${links.atestados}" target="_blank" rel="noopener noreferrer">Acessar formulário de Atestados</a><br><br>Utilize o canal oficial para enviar as informações solicitadas.`),
+            6: () => mostrarResposta("DIÁLOGO DIÁRIO DE SEGURANÇA — DDS", "O material de DDS da semana ainda não está disponível. Em breve ele será atualizado neste canal."),
+            7: () => mostrarResposta("RAMAL DE EMERGÊNCIA", `<a class="call" href="tel:08000193193">📞 0800 0 193 193<small>Aperte aqui para ligar</small></a><strong>Unidade de Rio Claro - SP:</strong> utilize o dígito 4, conforme orientação informada para este protótipo.<br><br>Em caso de emergência, siga imediatamente os procedimentos oficiais da unidade. Não aguarde uma resposta deste assistente.<br><br><small>Este contato e a orientação do dígito devem ser validados pela empresa antes de qualquer utilização oficial.</small>`),
+            8: () => mostrarResposta("SMART LEADER", `Acesse o aplicativo Smart Leader para consultar novidades, oportunidades, ofertas, aniversariantes, enquetes e outras informações.<br><br><a href="${links.smartLeader}" target="_blank" rel="noopener noreferrer">Localizar aplicativo Smart Leader</a>`),
+            9: () => mostrarResposta("OUTROS ASSUNTOS", "Em breve, disponibilizaremos orientações sobre outros assuntos relacionados ao suporte operacional. Agradecemos a compreensão.")
+        };
+
+        function selecionarModulo(n, semEco) {
+            if (!semEco) adicionarMensagem(`${n}. ${modulos[n - 1]}`, "user");
+            modo = "menu";
+            userInput.placeholder = PH_MENU;
+            comDigitando(MOD[n]);
+        }
+
+        function sugerir(itens, extra) {
+            sug.innerHTML = "";
+            primeira = itens.length ? itens[0].acao : null;
+            itens.forEach(it => {
+                const b = document.createElement("button");
+                b.type = "button";
+                b.className = "mention-item";
+                b.innerHTML = it.html;
+                b.addEventListener("mousedown", e => e.preventDefault());
+                b.addEventListener("click", it.acao);
+                sug.appendChild(b);
+            });
+            if (extra) { const d = document.createElement("div"); d.className = "sug-more"; d.textContent = extra; sug.appendChild(d); }
+            sug.hidden = !itens.length;
+        }
+
+        function aplicarMencao() {
+            userInput.value = userInput.value.replace(/@\S*$/, MENTION + " ");
+            sugerir([]);
+            userInput.focus();
+        }
+
+        function atualizarSugestoes() {
+            const v = userInput.value;
+            if (v.includes("@")) hint.classList.add("off");
+            const m = v.match(/(?:^|\s)(@\S*)$/), t = m ? m[1].toLowerCase() : "";
+            if (m && MENTION.startsWith(t) && t !== MENTION) {
+                return sugerir([{ html: `<div class="topbar-avatar mention-avatar"><img src="${ICONE}" alt=""></div><span><strong>@whirpoolsup</strong><small>WHIRLPOOL SUP 1.0 • Assistente de suporte operacional</small></span>`, acao: aplicarMencao }]);
+            }
+            if (modo === "epi") {
+                const r = buscar(v);
+                return sugerir(r.slice(0, 4).map(i => ({ html: `<span><strong>${i.n}</strong><small>${i.t} • ${i.c}</small></span>`, acao: () => mostrarItem(i) })), r.length > 4 ? `+${r.length - 4} resultados, continue digitando` : "");
+            }
+            sugerir([]);
+        }
+
+        function enviarMensagem(e) {
+            e.preventDefault();
+            const texto = userInput.value.trim();
+            if (!texto) return;
+            adicionarMensagem(texto, "user");
+            userInput.value = "";
+            sugerir([]);
+            const n = norm(texto);
+            if (n.includes(MENTION)) { comDigitando(chamarAssistente, 500); return; }
+            if (!ativo) {
+                if (/^(oi|ola|bom dia|boa tarde|boa noite)[!. ]*$/.test(n)) {
+                    const m = adicionarRespostaHTML("Olá! Para abrir o assistente, digite <strong>@</strong> e toque em <strong>@whirpoolsup</strong>.");
+                    adicionarBotoes(m, [{ texto: "Chamar WHIRLPOOL SUP 1.0", voltar: true, acao: () => comDigitando(chamarAssistente, 500) }]);
+                } else adicionarMensagem("Para acessar o suporte operacional, digite @ e toque em @whirpoolsup.");
+                return;
+            }
+            if (n === "menu" || n === "voltar") { comDigitando(mostrarMenu); return; }
+            if (modo === "epi") {
+                const r = buscar(texto);
+                if (r.length === 1) mostrarItem(r[0]);
+                else if (r.length) {
+                    const m = adicionarRespostaHTML(`Encontrei <strong>${r.length}</strong> itens. Toque no que procura:`);
+                    adicionarBotoes(m, r.slice(0, 6).map(i => ({ texto: `${i.n} — ${i.c}`, acao: () => mostrarItem(i) })));
+                } else adicionarMensagem('Não encontrei esse item. Tente outra palavra, como "luva" ou "óculos".');
+                return;
+            }
+            if (/^[1-9]$/.test(texto)) { selecionarModulo(+texto, true); return; }
+            adicionarMensagem("Digite um número de 1 a 9, ou use os botões. Para voltar ao início, digite MENU.");
+        }
+
+        const SOL = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+        const LUA = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+
+        function aplicarTema(t) {
+            document.documentElement.dataset.theme = t;
+            themeBtn.innerHTML = t === "dark" ? LUA : SOL;
+            themeBtn.setAttribute("aria-label", t === "dark" ? "Ativar modo claro" : "Ativar modo escuro");
+            document.querySelector('meta[name="theme-color"]').content = t === "dark" ? "#0b1523" : "#082b55";
+            try { localStorage.setItem("tema", t); } catch (x) {}
+        }
+
+        let tema = null;
+        try { tema = localStorage.getItem("tema"); } catch (x) {}
+        aplicarTema(tema || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+        themeBtn.addEventListener("click", () => aplicarTema(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+
+        userInput.placeholder = PH_INICIO;
+        userInput.addEventListener("input", atualizarSugestoes);
+        userInput.addEventListener("keydown", e => {
+            if (sug.hidden || !primeira) return;
+            const arroba = /@\S*$/.test(userInput.value);
+            if (e.key === "Tab" || (e.key === "Enter" && arroba)) { e.preventDefault(); primeira(); }
+            if (e.key === "Escape") sug.hidden = true;
+        });
+        messageForm.addEventListener("submit", enviarMensagem);
+    </script>
+
+</body>
+</html>

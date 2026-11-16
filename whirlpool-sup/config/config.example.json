@@ -1,0 +1,17 @@
+{
+  "autorizados": [],
+  "links": {
+    "tags": "COLE_AQUI_O_LINK_DO_FORMULARIO_DE_TAGS",
+    "atestados": "COLE_AQUI_O_LINK_DO_FORMULARIO_DE_ATESTADOS",
+    "smartLeader": "COLE_AQUI_O_LINK_DO_SMART_LEADER"
+  },
+  "emergencia": {
+    "telefone": "COLE_AQUI_O_NUMERO",
+    "observacao": "COLE_AQUI_A_OBSERVACAO_DA_UNIDADE"
+  },
+  "arquivos": {
+    "cardapio": "materials/cardapio/cardapio-semana.pdf",
+    "dds": "materials/dds/dds-semana.pdf"
+  },
+  "codigosEPI": []
+}
